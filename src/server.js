@@ -4,7 +4,7 @@ const userRouter = require("./user/userRoutes");
 const app = express();
 const port = 5001;
 
-
+    // handles json data
 app.use(express.json());
 
 app.use(userRouter);
