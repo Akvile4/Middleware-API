@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs/dist/bcrypt");
 const User = require("./userModel");
 
 exports.addUser = async (req, res) => {
@@ -7,7 +8,7 @@ exports.addUser = async (req, res) => {
         res.status(200).send({ user: newUser });
     } catch (error) {
         console.log(error);
-        res.status(500).send({err: error.message});
+        res.status(500).send({ err: error.message });
     }
 };
 
@@ -18,7 +19,7 @@ exports.listUsers = async (req, res) => {
         res.status(200).send({ users });
     } catch (error) {
         console.log(error);
-        res.status(500).send({err: error.message});
+        res.status(500).send({ err: error.message });
     }
 };
 
@@ -30,7 +31,7 @@ exports.updateUser = async (req, res) => {
             res.status(200).send({ user });
     } catch (error) {
         console.log(error);
-        res.status(500).send({err: error.message});
+        res.status(500).send({ err: error.message });
     }
 };
 
@@ -41,7 +42,29 @@ exports.deleteUser = async (req, res) => {
         res.status(200).send({ user });
     } catch (error) {
         console.log(error);
-        res.status(500).send({err: error.message});
+        res.status(500).send({ err: error.message });
+    }
+};
+
+exports.login = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.body.username });
+        if (user) {
+            const PasswordMatch = await bcrypt.compare( req.body.password, user.password );
+
+            if (PasswordMatch) {
+                res.status(200).send({ message: "Your password is correct!!!" });
+            }
+            else {
+                res.status(400).send({ error: "Wrong password!!!" });
+            }
+        }
+        else {
+            res.status(400).send({ error: "User does not exist" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ err: error.message });
     }
 };
 
