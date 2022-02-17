@@ -22,12 +22,68 @@ exports.listMovies = async (req, res) => {
     }
 };
 
-    // updates one movie title
+    // finds movie depending on what we ask
+exports.findMovie = async (req, res) => {
+    try {
+        if (req.body.title) {
+            const movie = await Movie.find(
+                { title: req.body.title });
+            res.status(200).send({ movie });
+        }
+        else if (req.body.actors) {
+            const movie = await Movie.find(
+                { actors: req.body.actors });
+            res.status(200).send({ movie });
+        }
+        else if (req.body.genre) {
+            const movie = await Movie.find(
+                { genre: req.body.genre });
+            res.status(200).send({ movie });
+        }
+        else if (req.body.year) {
+            const movie = await Movie.find(
+                { year: req.body.year });
+            res.status(200).send({ movie });
+        }
+        else {
+            res.status(400).send({ error: "COULD NOT FIND"});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ err: error.message });
+    }
+};
+
+    // updates movie data
 exports.updateMovie = async (req, res) => {
     try {
-        const movies = await Movie.updateOne({ title: req.body.title },
-            { $set: {title: req.body.newTitle} });
+        if (req.body.newTitle) {
+            const movies = await Movie.updateOne(
+                { title: req.body.title },
+                { $set: {title: req.body.newTitle} });
             res.status(200).send({ movies });
+        }
+        else if (req.body.newActors) {
+            const movies = await Movie.updateOne(
+                { title: req.body.title },
+                { $set: {actors: req.body.newActors} });
+            res.status(200).send({ movies });
+        }
+        else if (req.body.newGenre) {
+            const movies = await Movie.updateOne(
+                { title: req.body.title },
+                { $set: {genre: req.body.newGenre} });
+            res.status(200).send({ movies });
+        }
+        else if (req.body.newYear) {
+            const movies = await Movie.updateOne(
+                { title: req.body.title },
+                { $set: {year: req.body.newYear} });
+            res.status(200).send({ movies });
+        }
+        else {
+            res.status(400).send({ error: "NOT FOUND"});
+        }
     } catch (error) {
         console.log(error);
         res.status(500).send({ err: error.message });
