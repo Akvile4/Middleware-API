@@ -14,7 +14,7 @@ exports.addMovie = async (req, res) => {
     // will find everything in this database
 exports.listMovies = async (req, res) => {
     try {
-        const movies = await Movie.find({});
+        const movies = await Movie.find( {} );
         res.status(200).send({ movies });
     } catch (error) {
         console.log(error);
@@ -25,7 +25,7 @@ exports.listMovies = async (req, res) => {
     // updates one movie title
 exports.updateMovie = async (req, res) => {
     try {
-        const movies = await Movie.updateOne({ title: req.body.title},
+        const movies = await Movie.updateOne({ title: req.body.title },
             { $set: {title: req.body.newTitle} });
             res.status(200).send({ movies });
     } catch (error) {

@@ -23,12 +23,41 @@ exports.listUsers = async (req, res) => {
     }
 };
 
+exports.findUser = async (req, res) => {
+    try {
+        const user = await User.find(
+            { username: req.body.username });
+        res.status(200).send({ user });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ err: error.message });
+    }
+}
+
     // updates username
 exports.updateUser = async (req, res) => {
     try {
-        const user = await User.updateOne({ username: req.body.username },
-            { $set: { username: req.body.newUsername } });
-            res.status(200).send({ user });
+        if (req.body.newUsername) {
+            const user = await User.updateOne(
+                { username: req.body.username },
+                { $set: { username: req.body.newUsername } });
+                res.status(200).send({ user });
+        }
+        else if (req.body.newPassword) {
+            const user = await User.updateOne(
+                { username: req.body.username },
+                { $set: { password: req.body.newPasword } });
+                res.status(200).send({ user });
+        }
+        else if (req.body.newEmail) {
+            const user = await User.updateOne(
+                { email: req.body.email },
+                { $set: { email: req.body.newEmail }});
+                res.status(200).send({ user });
+        }
+        else {
+            res.status(400).send({ error: "COULD NOT FIND" });
+        }
     } catch (error) {
         console.log(error);
         res.status(500).send({ err: error.message });
@@ -46,6 +75,7 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
+    // checks if usersname's passwords match
 exports.login = async (req, res) => {
     try {
         const user = await User.findOne({ username: req.body.username });
